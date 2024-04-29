@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="shortcut icon" href="https://img0.baidu.com/it/u=40018911,1933388772&fm=253&fmt=auto&app=138&f=JPEG?w=615&h=500" type="image/x-icon">
+		<link rel="icon" href="https://img0.baidu.com/it/u=40018911,1933388772&fm=253&fmt=auto&app=138&f=JPEG?w=615&h=500" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FBA计算器</title>
+		<style>
+			.{
+				font-family: "Microsoft YaHei", sans-serif;
+			}
+			#fba{
+				text-align:center;
+				border-collapse: separate;
+			}
+			#fba tr td:first-child{
+				 padding:0px 5px;
+			}
+			#fba tr td, #fba tr th, #fba tr td input {
+				height: 25px;
+			}
+			#fba tr td:nth-child(2), #fba tr th:nth-child(2), #fba tr td:nth-child(2) input,
+			#fba tr td:nth-child(3), #fba tr th:nth-child(3), #fba tr td:nth-child(3) input
+			{
+				width: 120px;
+				text-align:center;
+			}
+			#fba tr td:nth-child(4), #fba tr th:nth-child(4){
+				color:red;
+				text-align:center;
+			}
+			#fbaerr, #long_inerr, #width_inerr, #height_inerr, #weight_lberr, #long_inerr{
+				color:red;
+			}
+			input::-webkit-outer-spin-button,
+			input::-webkit-inner-spin-button{
+				-webkit-appearance: none !important;
+				margin: 0;
+			}
+			input{
+				border-radius:5px;
+				border:1px solid #ddd;
+				background-color:#fee29969;
+			}
+			button{
+				width: 100px;
+				border:1px solid #ddd;
+				margin: 4px auto;
+				text-align: center;
+				display: flex;
+				height: 35px;
+				flex-wrap: nowrap;
+				align-items: stretch;
+				flex-direction: column-reverse;
+				justify-content: center;
+				border-radius:12px;
+				font-weight: bold;
+				background-color: #fee299;
+			}
+			#all{
+				width:400px;
+				margin:5px auto;
+			}
+			body{
+				background-image:url(https://pic.rmb.bdstatic.com/bjh/gallery/0a1799c60cbe8dbe329af22d97539c211605.jpeg);
+			}
+		</style>
+
+	</head>
+	<body>
+		<div id="all">
+			<table id="fba">
+				<tr><th></th><th>CM</th><th>IN</th><th></th></tr>
+				<tr><td>长</td><td><input type="number" id="long_cm"></td><td><input type="number" id="long_in"></td><td><div class="datashow" id="long_inerr"></div></td></tr>
+				<tr><td>宽</td><td><input type="number" id="width_cm"></td><td><input type="number" id="width_in"></td><td><div class="datashow" id="width_inerr"></div></td></tr>
+				<tr><td>高</td><td><input type="number" id="height_cm"></td><td><input type="number" id="height_in"></td><td><div class="datashow" id="height_inerr"></div></td></tr>
+				<tr><th></th><th>G</th><th>LB</th><th></th></tr>
+				<tr><td>实重</td><td><input type="number" id="weight_g"></td><td><input type="number" id="weight_lb"></td><td><div class="datashow" id="weight_lberr"></div></td></tr>
+				<tr><td>体积重</td><td><input type="number" id="volume_g"></td><td><input type="number" id="volume_lb"></td><td><div class="datashow" id="long_inerr"></div></td></tr>
+				<tr><th></th><th>非低价</th><th>低价</th><th></th></tr>
+				<tr><td>标准</td><td><div id="bzfba"></td><td><div id="bzdjfba"></td><td></td></tr>
+				<tr><td>服装</td><td><div id="fzfba"></td><td><div id="fzdjfba"></td><td></td></tr>
+				<tr><td>危险</td><td><div id="wxfba"></td><td><div id="wxdjfba"></td><td></td></tr>
+				<tr><td></td><td colspan="2" id="fbaerr"></td></tr>
+			<table>
+			
+		</div>
+		<button class="querybutton" id="queryFBA" onclick="queryFBA()">计算FBA</button>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var long_cm = document.getElementById('long_cm');
+				var long_in = document.getElementById('long_in');
+				var width_cm = document.getElementById('width_cm');
+				var width_in = document.getElementById('width_in');
+				var height_cm = document.getElementById('height_cm');
+				var height_in = document.getElementById('height_in');
+				var weight_g = document.getElementById('weight_g');
+				var weight_lb = document.getElementById('weight_lb');
+				var volume_g = document.getElementById('volume_g');
+				var volume_lb = document.getElementById('volume_lb');
+				function volume(){
+					var long_cm1 = document.getElementById('long_cm').value;
+					var long_in1 = document.getElementById('long_in').value;
+					var width_cm1 = document.getElementById('width_cm').value;
+					var width_in1 = document.getElementById('width_in').value;
+					var height_cm1 = document.getElementById('height_cm').value;
+					var height_in1 = document.getElementById('height_in').value;
+					var volume_g1 = document.getElementById('volume_g');
+					var volume_lb1 = document.getElementById('volume_lb');
+					if(long_cm1&&width_cm1&&height_cm1){
+						volume_g1.value = (long_cm1 * width_cm1 * height_cm1*453.59237/2277.801896).toFixed(3);
+						volume_lb1.value = (long_in1 * width_in1 * height_in1/139).toFixed(3);
+					}
+				}
+				long_cm.addEventListener('input', function() {
+					long_in.value = (this.value / 2.54).toFixed(3);
+					volume();
+				});
+				long_in.addEventListener('input', function() {
+					long_cm.value = (this.value * 2.54).toFixed(3);
+					volume();
+				});
+				width_cm.addEventListener('input', function() {
+					width_in.value = (this.value / 2.54).toFixed(3);
+					volume();
+				});
+				width_in.addEventListener('input', function() {
+					width_cm.value = (this.value * 2.54).toFixed(3);
+					volume();
+				});
+				height_cm.addEventListener('input', function() {
+					height_in.value = (this.value / 2.54).toFixed(3);
+					volume();
+				});
+				height_in.addEventListener('input', function() {
+					height_cm.value = (this.value * 2.54).toFixed(3);
+					volume();
+				});
+				weight_g.addEventListener('input', function() {
+					weight_lb.value = (this.value / 453.59237).toFixed(3);
+					volume();
+				});
+				weight_lb.addEventListener('input', function() {
+					weight_g.value = (this.value * 453.59237).toFixed(3);
+					volume();
+				});
+			});
+		</script>
+		<script> 
+			function queryFBA(){
+				document.getElementById('fbaerr').innerText = "";
+				let[long_insign, width_insign, height_insign, weight_lbsign] = [true,true,true,true]
+				var long_in = document.getElementById('long_in').value;
+				var width_in = document.getElementById('width_in').value;
+				var height_in = document.getElementById('height_in').value;
+				var weight_lb = document.getElementById('weight_lb').value;
+				document.getElementById('long_inerr').innerText = (!long_in) ? "不能为空" : "";
+				long_insign = !long_in ? false : true;
+				document.getElementById('width_inerr').innerText = (!width_in) ? "不能为空" : "";
+				width_insign = !width_in ? false : true;
+				document.getElementById('height_inerr').innerText = (!height_in) ? "不能为空" : "";
+				height_insign = !height_in ? false : true;
+				document.getElementById('weight_lberr').innerText = (!weight_lb) ? "不能为空" : "";
+				weight_lbsign = !weight_lb ? false : true;
+				if (long_insign && width_insign && height_insign && weight_lbsign){
+					document.getElementById('queryFBA').innerText = "计算中"
+					var dataValue = long_in+"kwaz"+width_in+"kwaz"+height_in+"kwaz"+weight_lb;
+					var requestBody = {
+						toUser: "3421391653@qq.com",
+						code: "MTKT",
+						toDevice: "",
+						operation: "action",
+						data: dataValue,
+						action: "32e63fb3-9b38-4494-97f3-88bb2b23448d",
+							wait: true,
+						maxWaitMs: 8000,
+						txt: true
+					};
+					fetch('https://push.getquicker.cn/to/quicker', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(requestBody)
+					}).then(function(response) {
+						document.getElementById('queryFBA').innerText = "计算FBA";
+						return response.json()
+					}).then(function(data) {
+						document.getElementById('bzfba').innerText = data.bz;
+						document.getElementById('fzfba').innerText = data.fz;
+						document.getElementById('wxfba').innerText = data.wx;
+						document.getElementById('bzdjfba').innerText = data.bzdj;
+						document.getElementById('fzdjfba').innerText = data.fzdj;
+						document.getElementById('wxdjfba').innerText = data.wxdj;
+					}).catch(function(error) {
+						document.getElementById('queryFBA').innerText = "计算FBA";
+						document.getElementById('fbaerr').innerText = error;
+					});
+				}
+			}
+		</script>
+	</body>
+</html>
